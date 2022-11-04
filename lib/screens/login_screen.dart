@@ -1,5 +1,5 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_final_fields
-
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_final_fields, unused_element
+// ignore: avoid_unnecessary_containers
 //import 'dart:js';
 
 import 'package:email_validator/email_validator.dart';
@@ -23,44 +23,57 @@ class _LoginScreenState extends State<LoginScreen> {
   String _passwordError = '';
   bool _passwordShowError = false;
 
+  bool _showLoader = false;
   bool _rememberme = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(246, 255, 255, 255),
-      body: Center(
-          child: ListView(
-        //mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Color.fromARGB(255, 250, 250, 250),
+      body: Stack(
         children: <Widget>[
-          _showlogo(),
-          _showemail(),
-          _showpassword(),
-          _showRememberme(),
-          _showButtons(),
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 40,
+                ),
+                _showLogo(),
+                SizedBox(
+                  height: 20,
+                ),
+                _showEmail(),
+                _showPassword(),
+                _showRememberme(),
+                _showButtons(),
+              ],
+            ),
+          ),
+          //_showLoader ? LoaderComponent(text: 'Loading...') : Container(),
         ],
-      )),
+      ),
     );
   }
 
-  Widget _showlogo() {
+  Widget _showLogo() {
     return Image(
       image: AssetImage('images/logoIngreso.jpg'),
-      width: 75,
+      width: 200,
       fit: BoxFit.fill,
     );
   }
 
-  Widget _showemail() {
-    // ignore: avoid_unnecessary_containers
+  Widget _showEmail() {
     return Container(
       padding: EdgeInsets.all(20),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-            fillColor: Colors.white,
+            fillColor: Color(0xFFFFFFFF),
             filled: true,
-            hintText: 'Digite su E-mail',
+            hintText: 'Ingresa tu e-mail',
             labelText: 'Email',
             errorText: _emailShowError ? _emailError : null,
             prefixIcon: Icon(Icons.alternate_email),
@@ -72,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _showpassword() {
+  Widget _showPassword() {
     return Container(
       padding: EdgeInsets.all(20),
       child: TextField(
@@ -105,13 +118,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _showRememberme() {
     return CheckboxListTile(
-        title: Text('Remember me!'),
-        value: _rememberme,
-        onChanged: ((value) {
-          setState(() {
-            _rememberme = value!;
-          });
-        }));
+      title: Text('Recuérdame!!'),
+      value: _rememberme,
+      onChanged: (value) {
+        setState(() {
+          _rememberme = value!;
+        });
+      },
+    );
   }
 
   Widget _showButtons() {
@@ -137,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
         style: ButtonStyle(backgroundColor:
             MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-          return Color(0XFF120E43);
+          return Color(0xFF4D9457);
         })),
         onPressed: (() => _login()),
       ),
@@ -151,9 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
         style: ButtonStyle(backgroundColor:
             MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-          return Color(0XFFE03B8B);
+          return Color(0XFF120E43);
         })),
-        onPressed: (() => _login()),
+        onPressed: (() => RegisterUserScreen()),
       ),
     );
   }
@@ -165,6 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
     });
+  }
+
+  void _register() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
   }
 
   bool _validateFields() {
@@ -197,10 +216,79 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  /*  void register() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
-  }
+  /*   if (!_validateFields()) {
+      return;
+    }
 
-  RegisterUserScreen() {} */
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estes conectado a internet.',
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    Map<String, dynamic> request = {
+      'email': _email,
+      'password': _password,
+    };
+
+    var url = Uri.parse('${Constans.apiUrl}/api/cuentas/login');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+      body: jsonEncode(request),
+    );
+
+    setState(() {
+      _showLoader = false;
+    });
+    if (response.statusCode >= 400) {
+      setState(() {
+        _passwordShowError = true;
+        _passwordError = "Email o contraseña incorrectos";
+      });
+      return;
+    }
+
+    void _storeUser(String body) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isRemembered', true);
+      await prefs.setString('userBody', body);
+    }
+
+    var body = response.body;
+    if (_rememberme) {
+      _storeUser(body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    var token = Token.fromJson(decodedJson);
+    // ignore: avoid_print
+    //print(token.token);
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  token: token,
+                ))); */
+
 }
+
+// ignore: non_constant_identifier_names
+RegisterUserScreen() {}
