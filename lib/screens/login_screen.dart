@@ -30,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(246, 255, 255, 255),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
+        //mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _showlogo(),
           _showemail(),
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _showlogo() {
     return Image(
       image: AssetImage('images/logoIngreso.jpg'),
-      width: 150,
+      width: 75,
       fit: BoxFit.fill,
     );
   }
@@ -86,8 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
           prefixIcon: Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: _passwordShow
-                ? Icon(Icons.visibility)
-                : Icon(Icons.visibility_off),
+                ? Icon(Icons.visibility_off)
+                : Icon(Icons.visibility),
             onPressed: () {
               setState(() {
                 _passwordShow = !_passwordShow;
