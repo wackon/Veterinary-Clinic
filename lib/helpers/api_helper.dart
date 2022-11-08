@@ -1,16 +1,16 @@
-/* /* import 'dart:convert';
+/* import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:veterinari_clinic/models/token.dart';
+import 'package:veterinary_clinic/models/token.dart';
 
- import 'package:veterinari_clinic/helpers/constans.dart';
-import 'package:veterinari_clinic/models/brand.dart';
-import 'package:veterinari_clinic/models/document_type.dart';
+ import 'package:veterinary_clinic/helpers/constans.dart';
+import 'package:veterinary_clinic/models/brand.dart';
+import 'package:veterinary_clinic/models/document_type.dart';
 
-import 'package:veterinari_clinic/models/response.dart';
-import 'package:veterinari_clinic/models/token.dart';
-import 'package:veterinari_clinic/models/user.dart';
-import 'package:veterinari_clinic/models/vehicle.dart';
-import 'package:veterinari_clinic/models/vehicle_type.dart';
+import 'package:veterinary_clinic/models/response.dart';
+import 'package:veterinary_clinic/models/token.dart';
+import 'package:veterinary_clinic/models/user.dart';
+import 'package:veterinary_clinic/models/vehicle.dart';
+import 'package:veterinary_clinic/models/vehicle_type.dart';
 
 import '../models/brand.dart';
 import '../models/document_type.dart';
@@ -20,7 +20,7 @@ import '../models/user.dart';
 import '../models/vehicle.dart';
 import '../models/vehicle_type.dart';
 import 'constans.dart'; 
- */
+
 class ApiHelper {
   static var list;
 

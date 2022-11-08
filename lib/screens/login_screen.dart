@@ -1,16 +1,22 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_final_fields, unused_element
-// ignore: avoid_unnecessary_containers
-//import 'dart:js';
+import 'dart:convert';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-/* import 'package:flutter/cupertino.dart'; */
+import 'package:http/http.dart' as http;
+import '../components/loader_component.dart';
+import '../helpers/constans.dart';
+import '../models/token.dart';
+import 'home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  // ignore: library_private_types_in_public_api
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -33,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -172,15 +177,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _login() async {
-    setState(() {
-      _passwordShow = false;
-      if (!_validateFields()) {
-        return;
-      }
-    });
-  }
-
   void _register() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => RegisterUserScreen()));
@@ -216,7 +212,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  /*   if (!_validateFields()) {
+  void _login() async {
+    setState(() {
+      _passwordShow = false;
+    });
+
+    if (!_validateFields()) {
       return;
     }
 
@@ -286,8 +287,8 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(
             builder: (context) => HomeScreen(
                   token: token,
-                ))); */
-
+                )));
+  }
 }
 
 // ignore: non_constant_identifier_names
